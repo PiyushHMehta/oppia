@@ -178,6 +178,17 @@ export class UserFactory {
             args as string
           );
           break;
+        case ROLES.VOICEOVER_SUBMITTER:
+          if (typeof args !== 'string') {
+            throw new Error(
+              'Exploration ID is required to assign a voiceover submitter.'
+            );
+          }
+          await superAdminInstance.addVoiceoverArtistToExplorationWithID(
+            args as string,
+            user.username
+          );
+          break;
         default:
           await superAdminInstance.assignRoleToUser(user.username, role);
           break;

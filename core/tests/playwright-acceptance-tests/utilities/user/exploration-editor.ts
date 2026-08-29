@@ -56,6 +56,8 @@ const addSolutionButton = 'button.e2e-test-oppia-add-solution-button';
 const submitAnswerButton = '.e2e-test-submit-answer-button';
 const submitSolutionButton = 'button.e2e-test-submit-solution-button';
 const textInputInteractionButton = 'div.e2e-test-interaction-tile-TextInput';
+const interactionDiv = '.e2e-test-interaction';
+const textInputField = '.e2e-test-text-input';
 
 const saveDraftButton = 'button.e2e-test-save-draft-button';
 const commitMessageSelector = 'textarea.e2e-test-commit-message-input';
@@ -525,6 +527,20 @@ export class ExplorationEditor extends BaseUser {
     await this.clickOnElementWithSelector(saveInteractionButton);
     await this.expectElementToBeVisible(addInteractionModalSelector, false);
     showMessage('Text input interaction has been added successfully.');
+  }
+
+  /**
+   * Update an existing text input interaction's placeholder text.
+   * @param {string} content - The placeholder text to set.
+   */
+  async updateTextInputInteraction(content: string): Promise<void> {
+    await this.expectElementToBeVisible(interactionDiv);
+    await this.clickOnElementWithSelector(interactionDiv);
+    await this.clickOnElementWithSelector(textInputField);
+    await this.typeInInputField(textInputField, content);
+    await this.clickOnElementWithSelector(saveInteractionButton);
+    await this.expectElementToBeVisible(addInteractionModalSelector, false);
+    showMessage('Text input interaction has been updated successfully.');
   }
 
   /**

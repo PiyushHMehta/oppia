@@ -19,7 +19,9 @@
 import {Page} from '@playwright/test';
 import {BaseUser} from '../common/playwright-utils';
 import testConstants from '../common/test-constants';
+import {showMessage} from '../common/show-message';
 
+const baseURL = testConstants.URLs.BaseURL;
 const voiceoverAdminURL = testConstants.URLs.VoiceoverAdmin;
 
 const languageAccentOptionSelector =
@@ -28,6 +30,14 @@ const addNewLanguageAccentButtonSelector =
   '.e2e-test-add-new-language-accent-button';
 const languageAccentDropdownSelector =
   '.e2e-test-language-accent-dropdown-selector';
+
+const settingsTabSelector = 'a.e2e-test-exploration-settings-tab';
+const voiceArtistSectionHeaderSelector = '.e2e-test-voice-artists-header';
+const voiceArtistSectionBodySelector = '.e2e-test-voice-artists-content';
+const editVoiceoverArtistButton = 'span.e2e-test-edit-voice-artist-roles';
+const voiceArtistUsernameInputBox = 'input#newVoicAartistUsername';
+const saveVoiceoverArtistEditButton =
+  'button.e2e-test-add-voice-artist-role-button';
 
 export class VoiceoverAdmin extends BaseUser {
   /**
@@ -58,6 +68,48 @@ export class VoiceoverAdmin extends BaseUser {
    */
   async navigateToVoiceoverAdminPage(): Promise<void> {
     await this.goto(voiceoverAdminURL);
+  }
+
+  /**
+   * Add one or more voiceover artists to the exploration currently open in
+   * the Settings tab.
+   * @param {string[]} voiceArtists - Usernames to add.
+   */
+  async addVoiceoverArtistsToExploration(
+    voiceArtists: string[]
+  ): Promise<void> {
+    if (!(await this.isElementVisible(voiceArtistSectionBodySelector))) {
+      await this.clickOnElementWithSelector(voiceArtistSectionHeaderSelector);
+      await this.expectElementToBeVisible(voiceArtistSectionBodySelector);
+    }
+    for (const artist of voiceArtists) {
+      await this.expectElementToBeVisible(editVoiceoverArtistButton);
+      await this.clickOnElementWithSelector(editVoiceoverArtistButton);
+      await this.expectElementToBeVisible(voiceArtistUsernameInputBox);
+      await this.clearAllTextFrom(voiceArtistUsernameInputBox);
+      await this.typeInInputField(voiceArtistUsernameInputBox, artist);
+      await this.clickOnElementWithSelector(saveVoiceoverArtistEditButton);
+      await this.expectElementToBeVisible(
+        `div.e2e-test-voice-artist-${artist}`
+      );
+      showMessage(`${artist} added as a voiceover artist.`);
+    }
+  }
+
+  /**
+   * Navigate to the given exploration's editor settings tab and add the user
+   * as a voiceover artist.
+   * @param {string} explorationId - The exploration ID.
+   * @param {string} voiceArtistUsername - Username to add.
+   */
+  async addVoiceoverArtistToExplorationWithID(
+    explorationId: string,
+    voiceArtistUsername: string
+  ): Promise<void> {
+    await this.goto(`${baseURL}/create/${explorationId}#/`);
+    await this.waitForPageToFullyLoad();
+    await this.clickOnElementWithSelector(settingsTabSelector);
+    await this.addVoiceoverArtistsToExploration([voiceArtistUsername]);
   }
 }
 

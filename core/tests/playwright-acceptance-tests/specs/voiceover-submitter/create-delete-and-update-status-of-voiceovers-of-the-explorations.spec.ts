@@ -107,7 +107,8 @@ test.describe('Voiceover Submitter', function () {
       'voiceoverSubmitter',
       'voiceover_submitter@example.com',
       browser,
-      [ROLES.VOICEOVER_SUBMITTER]
+      [ROLES.VOICEOVER_SUBMITTER],
+      explorationId
     );
   });
 
