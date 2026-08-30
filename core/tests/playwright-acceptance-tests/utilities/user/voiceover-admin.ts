@@ -32,6 +32,10 @@ const languageAccentDropdownSelector =
   '.e2e-test-language-accent-dropdown-selector';
 
 const settingsTabSelector = 'a.e2e-test-exploration-settings-tab';
+const mobileOptionsButtonSelector = 'i.e2e-test-mobile-options';
+const mobileNavbarDropdownSelector = 'div.e2e-test-mobile-options-dropdown';
+const mobileSettingsBarSelector = 'li.e2e-test-mobile-settings-button';
+const dismissWelcomeModalSelector = 'button.e2e-test-dismiss-welcome-modal';
 const voiceArtistSectionHeaderSelector = '.e2e-test-voice-artists-header';
 const voiceArtistSectionBodySelector = '.e2e-test-voice-artists-content';
 const editVoiceoverArtistButton = 'span.e2e-test-edit-voice-artist-roles';
@@ -108,7 +112,21 @@ export class VoiceoverAdmin extends BaseUser {
   ): Promise<void> {
     await this.goto(`${baseURL}/create/${explorationId}#/`);
     await this.waitForPageToFullyLoad();
-    await this.clickOnElementWithSelector(settingsTabSelector);
+    const modal = await this.page.$(dismissWelcomeModalSelector);
+    if (modal) {
+      await this.clickOnElementWithSelector(dismissWelcomeModalSelector);
+      await this.expectElementToBeVisible(dismissWelcomeModalSelector, false);
+    }
+    if (this.isViewportAtMobileWidth()) {
+      const dropdown = await this.page.$(mobileNavbarDropdownSelector);
+      if (!dropdown) {
+        await this.clickOnElementWithSelector(mobileOptionsButtonSelector);
+        await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
+      }
+      await this.clickOnElementWithSelector(mobileSettingsBarSelector);
+    } else {
+      await this.clickOnElementWithSelector(settingsTabSelector);
+    }
     await this.addVoiceoverArtistsToExploration([voiceArtistUsername]);
   }
 }
