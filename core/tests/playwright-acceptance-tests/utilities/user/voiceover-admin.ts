@@ -118,8 +118,10 @@ export class VoiceoverAdmin extends BaseUser {
       await this.expectElementToBeVisible(dismissWelcomeModalSelector, false);
     }
     if (this.isViewportAtMobileWidth()) {
-      const dropdown = await this.page.$(mobileNavbarDropdownSelector);
-      if (!dropdown) {
+      const dropdownVisible = await this.isElementVisible(
+        mobileNavbarDropdownSelector
+      );
+      if (!dropdownVisible) {
         await this.clickOnElementWithSelector(mobileOptionsButtonSelector);
         await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
       }
