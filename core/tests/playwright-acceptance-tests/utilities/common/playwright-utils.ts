@@ -572,6 +572,29 @@ export class BaseUser {
   }
 
   /**
+   * Click a confirm or cancel button inside a common confirmation modal.
+   * @param {string} title - Expected modal header text.
+   * @param {'confirm' | 'cancel'} action - Which button to click.
+   */
+  async clickButtonInModal(
+    title: string,
+    action: 'confirm' | 'cancel'
+  ): Promise<void> {
+    const modalTitleSelector = '.e2e-test-modal-header';
+    const confirmBtnSelector = '.e2e-test-confirm-action-button';
+    const cancelBtnSelector = '.e2e-test-cancel-action-button';
+
+    await this.expectElementToBeVisible(modalTitleSelector);
+    await this.expectTextContentToBe(modalTitleSelector, title);
+
+    const actionBtnSelector =
+      action === 'confirm' ? confirmBtnSelector : cancelBtnSelector;
+    await this.expectElementToBeVisible(actionBtnSelector);
+    await this.clickOnElementWithSelector(actionBtnSelector);
+    await this.expectElementToBeVisible(actionBtnSelector, false);
+  }
+
+  /**
    * Verify text content inside an element, waiting until it matches expected text.
    * @param {string} selector - The selector of the element to get text from.
    * @param {string} text - The expected text content.
