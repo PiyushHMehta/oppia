@@ -306,6 +306,15 @@ export class UserFactory {
       VoiceoverAdminFactory(user.page),
     ]);
 
+    await superAdminInstance.assignRoleToUser(
+      'superAdm',
+      ROLES.VOICEOVER_ADMIN
+    );
+    await superAdminInstance.expectUserToHaveRole(
+      'superAdm',
+      ROLES.VOICEOVER_ADMIN
+    );
+
     showMessage('Super admin created successfully.');
     return superAdminInstance;
   };
