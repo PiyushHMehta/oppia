@@ -125,6 +125,7 @@ export class VoiceoverAdmin extends BaseUser {
         await this.clickOnElementWithSelector(mobileOptionsButtonSelector);
         await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
       }
+      await this.clickOnElementWithSelector(mobileNavbarDropdownSelector);
       await this.clickOnElementWithSelector(mobileSettingsBarSelector);
     } else {
       await this.clickOnElementWithSelector(settingsTabSelector);
