@@ -78,7 +78,7 @@ const nodeWarningSignSelector = '.e2e-test-node-warning-sign';
 // Preview tab navigation.
 const previewTabButtonSelector = '.e2e-test-preview-tab';
 const mobilePreviewTabButtonSelector = '.e2e-test-mobile-preview-button';
-const mobileOptionsButtonSelector = '.e2e-test-mobile-options-button';
+const mobileOptionsButtonSelector = 'i.e2e-test-mobile-options';
 const mobileNavbarDropdownSelector = '.e2e-test-mobile-options-dropdown';
 const mobileNavbarPaneSelector = '.e2e-test-navbar-options-dropdown-toggle-btn';
 
