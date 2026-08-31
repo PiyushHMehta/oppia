@@ -326,14 +326,19 @@ export class VoiceoverSubmitter extends BaseUser {
     await this.expectElementToBeVisible(voiceoverPlayIconSelector);
     await this.clickOnElementWithSelector(voiceoverPlayPauseButtonSelector);
     await this.page.waitForFunction(
-      (selector: string, initialProgress: number) => {
+      ({
+        selector,
+        initialProgress,
+      }: {
+        selector: string;
+        initialProgress: number;
+      }) => {
         const el = document.querySelector(selector);
         return (
           parseInt(el?.getAttribute('aria-valuenow') ?? '0') > initialProgress
         );
       },
-      voiceoverProgressBarSelector,
-      initial
+      {selector: voiceoverProgressBarSelector, initialProgress: initial}
     );
     await this.expectElementToBeVisible(voiceoverPauseIconSelector);
     await this.clickOnElementWithSelector(voiceoverPlayPauseButtonSelector);
