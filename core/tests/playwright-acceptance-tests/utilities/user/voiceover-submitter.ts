@@ -103,17 +103,17 @@ export class VoiceoverSubmitter extends BaseUser {
    */
   async navigateToPreviewTab(): Promise<void> {
     if (this.isViewportAtMobileWidth()) {
-      const mobileOptions = await this.page.$(mobileOptionsButtonSelector);
-      if (!mobileOptions) {
-        await this.expectElementToBeVisible(mobileOptionsButtonSelector);
-      }
       const dropdownVisible = await this.isElementVisible(
         mobileNavbarPaneSelector
       );
       if (!dropdownVisible) {
-        await this.page
-          .locator(mobileOptionsButtonSelector)
-          .dispatchEvent('click');
+        await this.page.evaluate(() => {
+          const overlay = document.querySelector('oppia-state-translation');
+          if (overlay) {
+            (overlay as HTMLElement).style.display = 'none';
+          }
+        });
+        await this.clickOnElementWithSelector(mobileOptionsButtonSelector);
         await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
       }
       await this.clickOnElementWithSelector(mobileNavbarPaneSelector, {
