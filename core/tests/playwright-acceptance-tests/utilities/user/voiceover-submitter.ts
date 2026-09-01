@@ -113,15 +113,15 @@ export class VoiceoverSubmitter extends BaseUser {
             (overlay as HTMLElement).style.display = 'none';
           }
         });
-        await this.clickOnElementWithSelector(mobileOptionsButtonSelector);
+        await this.page
+          .locator(mobileOptionsButtonSelector)
+          .click({force: true});
         await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
       }
-      await this.clickOnElementWithSelector(mobileNavbarPaneSelector, {
-        force: true,
-      });
-      await this.clickOnElementWithSelector(mobilePreviewTabButtonSelector, {
-        force: true,
-      });
+      await this.page.locator(mobileNavbarPaneSelector).click({force: true});
+      await this.page
+        .locator(mobilePreviewTabButtonSelector)
+        .click({force: true});
     } else {
       await this.expectElementToBeVisible(previewTabButtonSelector);
       await this.clickOnElementWithSelector(previewTabButtonSelector);
