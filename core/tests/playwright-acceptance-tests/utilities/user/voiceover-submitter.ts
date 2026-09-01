@@ -111,10 +111,14 @@ export class VoiceoverSubmitter extends BaseUser {
         mobileNavbarPaneSelector
       );
       if (!dropdownVisible) {
-        await this.clickOnElementWithSelector(mobileOptionsButtonSelector);
+        await this.clickOnElementWithSelector(mobileOptionsButtonSelector, {
+          force: true,
+        });
         await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
       }
-      await this.clickOnElementWithSelector(mobilePreviewTabButtonSelector);
+      await this.clickOnElementWithSelector(mobilePreviewTabButtonSelector, {
+        force: true,
+      });
     } else {
       await this.expectElementToBeVisible(previewTabButtonSelector);
       await this.clickOnElementWithSelector(previewTabButtonSelector);
