@@ -80,7 +80,6 @@ const previewTabButtonSelector = '.e2e-test-preview-tab';
 const mobilePreviewTabButtonSelector = '.e2e-test-mobile-preview-button';
 const mobileOptionsButtonSelector = 'i.e2e-test-mobile-options';
 const mobileNavbarDropdownSelector = '.e2e-test-mobile-options-dropdown';
-const mobileNavbarPaneSelector = '.e2e-test-navbar-options-dropdown-toggle-btn';
 
 // Audio bar in lesson preview / lesson player.
 const audioExpandButtonSelector = '.e2e-test-lp-audio-expand-button';
@@ -103,25 +102,28 @@ export class VoiceoverSubmitter extends BaseUser {
    */
   async navigateToPreviewTab(): Promise<void> {
     if (this.isViewportAtMobileWidth()) {
-      const dropdownVisible = await this.isElementVisible(
-        mobileNavbarPaneSelector
-      );
-      if (!dropdownVisible) {
-        await this.page.evaluate(() => {
-          const overlay = document.querySelector('oppia-state-translation');
-          if (overlay) {
-            (overlay as HTMLElement).style.display = 'none';
-          }
-        });
-        await this.page
-          .locator(mobileOptionsButtonSelector)
-          .click({force: true});
-        await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
+      const navbarExpanded = await this.page.$('.navbar-mobile-options');
+      if (!navbarExpanded) {
+        await this.clickOnElementWithSelector(mobileOptionsButtonSelector);
       }
-      await this.page.locator(mobileNavbarPaneSelector).click({force: true});
+      await this.expectElementToBeVisible(mobileNavbarDropdownSelector);
+      await this.clickOnElementWithSelector(mobileNavbarDropdownSelector, {
+        force: true,
+      });
+      await this.expectElementToBeVisible(
+        '.oppia-exploration-editor-tabs-dropdown'
+      );
       await this.page
         .locator(mobilePreviewTabButtonSelector)
-        .click({force: true});
+        .dispatchEvent('click');
+      const isVisible = await this.isElementVisible(
+        '.oppia-exploration-editor-tabs-dropdown.show'
+      );
+      if (isVisible) {
+        await this.page.click('.e2e-test-mobile-options-dropdown', {
+          force: true,
+        });
+      }
     } else {
       await this.expectElementToBeVisible(previewTabButtonSelector);
       await this.clickOnElementWithSelector(previewTabButtonSelector);
